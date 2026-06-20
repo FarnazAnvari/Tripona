@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Heart, User, Phone, ChevronRight } from "lucide-react";
+import { Heart, User, Phone, ChevronRight, Menu, X } from "lucide-react";
 
 // Destinations
 const destinationsData: Record<string, string[]> = {
@@ -88,7 +88,7 @@ const dealsData = [
 
 // About
 const aboutData = [
-  "About Intrepid",
+  "About Tripona",
   "Our mission",
   "Responsible travel",
   "Careers",
@@ -100,6 +100,7 @@ export default function Header() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [activeContinent, setActiveContinent] = useState("Asia");
   const [activeWay, setActiveWay] = useState("Themes");
+  const [mobileMenu, setMobileMenu] = useState(false);
 
   return (
     <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -126,11 +127,11 @@ export default function Header() {
             </svg>
 
             <span className="text-[#e31c23] text-[24px] font-bold tracking-tighter">
-              Intrepid
+              Tripona
             </span>
           </Link>
 
-          {/* Navigation */}
+          {/* Desktop Navigation */}
 
           <nav className="hidden lg:flex items-center gap-8 h-full">
             {/* Destinations */}
@@ -161,7 +162,6 @@ export default function Header() {
                         }`}
                       >
                         <span className="text-[14px]">{item}</span>
-
                         {item !== "All destinations" && (
                           <ChevronRight size={14} className="text-gray-400" />
                         )}
@@ -218,7 +218,6 @@ export default function Header() {
                         }`}
                       >
                         <span className="text-[14px]">{item}</span>
-
                         {item !== "New trips" && (
                           <ChevronRight size={14} className="text-gray-400" />
                         )}
@@ -305,22 +304,65 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Right icons */}
+        {/* Right side */}
 
         <div className="flex items-center gap-6 text-gray-800">
-          <Link href="#" className="hover:text-[#e31c23]">
-            <Heart size={22} strokeWidth={1.5} />
-          </Link>
+          {/* Desktop icons */}
 
-          <Link href="#" className="hover:text-[#e31c23]">
-            <User size={22} strokeWidth={1.5} />
-          </Link>
+          <div className="hidden lg:flex items-center gap-6">
+            <Link href="#" className="hover:text-[#e31c23]">
+              <Heart size={22} strokeWidth={1.5} />
+            </Link>
 
-          <Link href="#" className="hover:text-[#e31c23]">
-            <Phone size={22} strokeWidth={1.5} />
-          </Link>
+            <Link href="#" className="hover:text-[#e31c23]">
+              <User size={22} strokeWidth={1.5} />
+            </Link>
+
+            <Link href="#" className="hover:text-[#e31c23]">
+              <Phone size={22} strokeWidth={1.5} />
+            </Link>
+          </div>
+
+          {/* Mobile hamburger */}
+
+          <button
+            className="lg:hidden"
+            onClick={() => setMobileMenu(!mobileMenu)}
+          >
+            {mobileMenu ? <X size={28} /> : <Menu size={28} />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile menu */}
+
+      {mobileMenu && (
+        <div className="lg:hidden bg-white border-t border-gray-200">
+          <div className="flex flex-col p-4">
+            <Link href="#" className="py-3 font-semibold border-b">
+              Destinations
+            </Link>
+
+            <Link href="#" className="py-3 font-semibold border-b">
+              Ways to travel
+            </Link>
+
+            <Link href="#" className="py-3 font-semibold border-b">
+              Deals
+            </Link>
+
+            <Link href="#" className="py-3 font-semibold border-b">
+              About
+            </Link>
+
+            <div className="flex gap-6 pt-4">
+              <Heart size={22} />
+              <User size={22} />
+              <Phone size={22} />
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

@@ -1,6 +1,7 @@
 import Hero from "@/components/home/Hero";
 import SearchBar from "@/components/home/SearchBar";
 import Features from "@/components/home/Features"; // وارد کردن کامپوننت جدید
+import TripSection from "@/components/home/TripSection";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
         <SearchBar />
       </div>
       <Features /> {/* اینجا اضافه شود */}
+      <TripSection />
       {/* بخش‌های بعدی مثل تورها را اینجا اضافه خواهیم کرد */}
       <div className="max-w-[1400px] mx-auto px-6 py-20">
         <h2 className="text-3xl font-bold text-gray-900 mb-8">Popular Trips</h2>

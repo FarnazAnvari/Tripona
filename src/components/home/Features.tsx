@@ -4,13 +4,13 @@ import React from "react";
 
 const features = [
   {
-    text: "1000s of experiences, over 100 countries",
+    text: "Limitless destinations, countless memories",
   },
   {
-    text: "Shared adventures with like-minded people",
+    text: "Travel with people who share your passion",
   },
   {
-    text: "Creating positive change since 1989",
+    text: "Creating unforgettable journeys since 2015",
   },
 ];
 
@@ -20,7 +20,7 @@ export default function Features() {
       <div className="max-w-6xl mx-auto">
         {/* تیتر اصلی */}
         <h2 className="text-2xl md:text-3xl text-center text-gray-900 mb-12 font-medium">
-          Real and remarkable small group trips worldwide
+          Travel with purpose, explore with heart
         </h2>
 
         {/* بخش ویژگی‌ها */}

@@ -1,149 +1,382 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-// دیتای نمونه برای تورها
+const cardWidth = 270;
+const gap = 20;
+const move = cardWidth + gap;
+
 const tripData = {
-  "Only Intrepid experiences": [
+  "Only Tripona experiences": [
     {
       id: 1,
-      image:
-        "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=80&w=800",
+      image: "/images/trips/trip1.jpg",
       experience: "Kinabalu summit at sunrise",
       duration: "11 days",
       title: "Sabah Adventure",
-      originalPrice: "3,170",
-      currentPrice: "2,536",
+      originalPrice: "3170",
+      currentPrice: "2536",
     },
     {
       id: 2,
-      image:
-        "https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&q=80&w=800",
-      experience: "Cappadocia weavin'",
+      image: "/images/trips/trip2.jpg",
+      experience: "Cappadocia weaving",
       duration: "8 days",
       title: "Turkey Highlights",
-      originalPrice: "1,840",
-      currentPrice: "1,380",
+      originalPrice: "1840",
+      currentPrice: "1380",
     },
     {
       id: 3,
-      image:
-        "https://images.unsplash.com/photo-1512100356956-c1227c331f01?auto=format&fit=crop&q=80&w=800",
+      image: "/images/trips/trip3.jpg",
       experience: "Galapagos swim stops",
       duration: "8 days",
       title: "Galapagos Island Hopping",
-      originalPrice: "3,125",
-      currentPrice: "2,257",
+      originalPrice: "3125",
+      currentPrice: "2257",
     },
     {
       id: 4,
-      image:
-        "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=80&w=800",
+      image: "/images/trips/trip4.jpg",
       experience: "Late night bites",
       duration: "10 days",
       title: "Vietnam Express Southbound",
-      currentPrice: "1,465",
+      currentPrice: "1465",
     },
     {
       id: 5,
-      image:
-        "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=800",
-      experience: "Learning the lingo from locals",
+      image: "/images/trips/trip5.jpg",
+      experience: "Learning from locals",
       duration: "12 days",
       title: "Japan: Land of the Rising Sun",
-      originalPrice: "5,330",
-      currentPrice: "4,264",
+      originalPrice: "5330",
+      currentPrice: "4264",
+    },
+    {
+      id: 6,
+      image: "/images/trips/trip6.jpg",
+      experience: "Mountain village life",
+      duration: "9 days",
+      title: "Nepal Discovery",
+      currentPrice: "1890",
+    },
+    {
+      id: 7,
+      image: "/images/trips/trip7.jpg",
+      experience: "Sahara camel trek",
+      duration: "7 days",
+      title: "Morocco Desert Tour",
+      currentPrice: "990",
+    },
+    {
+      id: 8,
+      image: "/images/trips/trip8.jpg",
+      experience: "Island hopping",
+      duration: "6 days",
+      title: "Thailand Beaches",
+      currentPrice: "1180",
+    },
+    {
+      id: 9,
+      image: "/images/trips/trip9.jpg",
+      experience: "Iceland waterfalls",
+      duration: "8 days",
+      title: "Iceland Adventure",
+      currentPrice: "2650",
+    },
+    {
+      id: 10,
+      image: "/images/trips/trip10.jpg",
+      experience: "Ancient temples",
+      duration: "9 days",
+      title: "Cambodia Discovery",
+      currentPrice: "1420",
     },
   ],
-  "New trips": [],
-  "Popular trips": [],
+
+  "New trips": [
+    {
+      id: 11,
+      image: "/images/trips/trip11.jpg",
+      experience: "Northern lights hunting",
+      duration: "7 days",
+      title: "Arctic Norway Explorer",
+      currentPrice: "2990",
+    },
+    {
+      id: 12,
+      image: "/images/trips/trip12.jpg",
+      experience: "Andes mountain trails",
+      duration: "9 days",
+      title: "Peru Adventure Trek",
+      originalPrice: "2490",
+      currentPrice: "1990",
+    },
+    {
+      id: 13,
+      image: "/images/trips/trip13.jpg",
+      experience: "Safari under the stars",
+      duration: "8 days",
+      title: "Kenya Wildlife Safari",
+      currentPrice: "3290",
+    },
+    {
+      id: 14,
+      image: "/images/trips/trip14.jpg",
+      experience: "Mediterranean island hopping",
+      duration: "10 days",
+      title: "Greek Islands Escape",
+      originalPrice: "2690",
+      currentPrice: "2190",
+    },
+    {
+      id: 15,
+      image: "/images/trips/trip15.jpg",
+      experience: "Rainforest wildlife",
+      duration: "6 days",
+      title: "Costa Rica Nature Break",
+      currentPrice: "1750",
+    },
+    {
+      id: 16,
+      image: "/images/trips/trip16.jpg",
+      experience: "Desert & ancient cities",
+      duration: "9 days",
+      title: "Jordan Explorer",
+      currentPrice: "2100",
+    },
+    {
+      id: 17,
+      image: "/images/trips/trip17.jpg",
+      experience: "Glacier & volcano landscapes",
+      duration: "8 days",
+      title: "Iceland Discovery",
+      currentPrice: "2980",
+    },
+    {
+      id: 18,
+      image: "/images/trips/trip18.jpg",
+      experience: "Historic Silk Road",
+      duration: "12 days",
+      title: "Uzbekistan Cultural Tour",
+      currentPrice: "2450",
+    },
+  ],
+
+  "Popular trips": [
+    {
+      id: 19,
+      image: "/images/trips/trip19.jpg",
+      experience: "Classic Inca Trail",
+      duration: "8 days",
+      title: "Inca Trail Express",
+      originalPrice: "2250",
+      currentPrice: "1890",
+    },
+    {
+      id: 20,
+      image: "/images/trips/trip20.jpg",
+      experience: "Big five safari",
+      duration: "10 days",
+      title: "Serengeti & Ngorongoro Safari",
+      currentPrice: "3490",
+    },
+    {
+      id: 21,
+      image: "/images/trips/trip21.jpg",
+      experience: "Temples at sunrise",
+      duration: "9 days",
+      title: "Cambodia & Vietnam Discovery",
+      originalPrice: "1980",
+      currentPrice: "1590",
+    },
+    {
+      id: 22,
+      image: "/images/trips/trip22.jpg",
+      experience: "Sailing the turquoise coast",
+      duration: "8 days",
+      title: "Turkey Sailing Adventure",
+      currentPrice: "1740",
+    },
+    {
+      id: 23,
+      image: "/images/trips/trip23.jpg",
+      experience: "Local food markets",
+      duration: "12 days",
+      title: "Best of Thailand",
+      originalPrice: "2290",
+      currentPrice: "1832",
+    },
+  ],
 };
 
 export default function TripSection() {
-  const [activeTab, setActiveTab] = useState("Only Intrepid experiences");
+  const [activeTab, setActiveTab] = useState("Only Tripona experiences");
+  const [index, setIndex] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  const sliderRef = useRef<HTMLDivElement | null>(null);
+
+  const trips = useMemo(
+    () => tripData[activeTab as keyof typeof tripData] || [],
+    [activeTab],
+  );
+
+  const maxTranslate = Math.max(
+    trips.length * cardWidth +
+      Math.max(trips.length - 1, 0) * gap -
+      containerWidth,
+    0,
+  );
+
+  const currentTranslate = Math.min(index * move, maxTranslate);
+  const canGoPrev = currentTranslate > 0;
+  const canGoNext = currentTranslate < maxTranslate;
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (sliderRef.current) {
+        setContainerWidth(sliderRef.current.offsetWidth);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
+
+  const next = () => {
+    if (canGoNext) {
+      setIndex((current) => current + 1);
+    }
+  };
+
+  const prev = () => {
+    if (canGoPrev) {
+      setIndex((current) => Math.max(current - 1, 0));
+    }
+  };
 
   return (
     <section className="py-12 bg-white px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* هدر بخش: تب‌ها و دکمه Explore */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div className="flex gap-8 overflow-x-auto w-full md:w-auto no-scrollbar">
-            {Object.keys(tripData).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`pb-4 text-lg font-bold whitespace-nowrap transition-all border-b-2 ${
-                  activeTab === tab
-                    ? "border-red-600 text-gray-900"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          <button className="hidden md:flex items-center gap-2 px-4 py-2 border border-gray-900 rounded-md font-bold hover:bg-gray-50 transition-colors">
-            Explore experiences
-          </button>
-        </div>
-
-        {/* لیست کارت‌ها (اسکرول افقی در موبایل) */}
-        <div className="flex gap-5 overflow-x-auto pb-6 no-scrollbar snap-x">
-          {tripData[activeTab as keyof typeof tripData]?.map((trip) => (
-            <div
-              key={trip.id}
-              className="min-w-[280px] md:min-w-[240px] flex-1 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden snap-start hover:shadow-md transition-shadow group cursor-pointer"
+        <div className="flex gap-8 mb-8 overflow-x-auto">
+          {Object.keys(tripData).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => {
+                setActiveTab(tab);
+                setIndex(0);
+              }}
+              className={`text-lg font-bold whitespace-nowrap transition-colors ${
+                activeTab === tab
+                  ? "text-gray-900"
+                  : "text-gray-400 hover:text-gray-700"
+              }`}
             >
-              {/* تصویر با متن روی آن */}
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={trip.image}
-                  alt={trip.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-black/20" />
-                <div className="absolute inset-0 p-4 flex items-center justify-center text-center">
-                  <h3 className="text-white font-bold text-xl leading-tight drop-shadow-md">
-                    {trip.experience}
-                  </h3>
-                </div>
-              </div>
-
-              {/* جزئیات پایین کارت */}
-              <div className="p-4 flex flex-col h-[180px] justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">{trip.duration}</p>
-                  <h4 className="font-bold text-gray-900 leading-tight group-hover:text-red-600 transition-colors">
-                    {trip.title}
-                  </h4>
-                </div>
-
-                <div className="text-right mt-4">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-wider">
-                    From
-                  </p>
-                  <div className="flex items-center justify-end gap-2">
-                    {trip.originalPrice && (
-                      <span className="text-gray-400 line-through text-sm">
-                        USD ${trip.originalPrice}
-                      </span>
-                    )}
-                    <span className="text-lg font-black text-gray-900">
-                      USD ${trip.currentPrice}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+              {tab}
+            </button>
           ))}
         </div>
 
-        {/* دکمه Explore در موبایل */}
-        <button className="w-full mt-4 md:hidden py-3 border border-gray-900 rounded-md font-bold">
-          Explore experiences
-        </button>
+        <div className="relative group">
+          {canGoPrev && (
+            <button
+              onClick={prev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-20
+              w-10 h-10 flex items-center justify-center
+              rounded-full bg-white/90 backdrop-blur shadow-md
+              opacity-0 group-hover:opacity-100
+              hover:shadow-lg transition-all hover:scale-110"
+              aria-label="Previous trips"
+            >
+              <ChevronLeft size={20} className="text-gray-700" />
+            </button>
+          )}
+
+          <div ref={sliderRef} className="overflow-hidden py-3">
+            <div
+              className="flex transition-transform duration-500 ease-out"
+              style={{
+                transform: `translateX(-${currentTranslate}px)`,
+                gap: `${gap}px`,
+              }}
+            >
+              {trips.map((trip) => (
+                <div
+                  key={trip.id}
+                  style={{ width: `${cardWidth}px` }}
+                  className="flex-shrink-0 bg-white rounded-xl border border-gray-100
+                  overflow-hidden shadow-sm hover:shadow-[0_8px_24px_rgba(0,0,0,0.14)]
+                  transition-shadow duration-300 group/card cursor-pointer"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={trip.image}
+                      alt={trip.title}
+                      className="w-full h-full object-cover
+                      group-hover/card:scale-105 transition-transform duration-500"
+                    />
+
+                    <div className="absolute inset-0 bg-black/25" />
+
+                    <div className="absolute inset-0 flex items-center justify-center text-center p-4">
+                      <h3 className="text-white font-bold text-xl drop-shadow-md">
+                        {trip.experience}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="p-4 flex flex-col h-[150px] justify-between">
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1">
+                        {trip.duration}
+                      </p>
+
+                      <h4 className="font-bold text-gray-900 group-hover/card:text-red-600 transition-colors">
+                        {trip.title}
+                      </h4>
+                    </div>
+
+                    <div className="text-right">
+                      <p className="text-[10px] text-gray-500 uppercase">
+                        From
+                      </p>
+
+                      <div className="flex justify-end gap-2 items-center">
+                        {trip.originalPrice && (
+                          <span className="text-gray-400 line-through text-sm">
+                            USD ${trip.originalPrice}
+                          </span>
+                        )}
+
+                        <span className="text-lg font-black">
+                          USD ${trip.currentPrice}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {canGoNext && (
+            <button
+              onClick={next}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-20
+              w-10 h-10 flex items-center justify-center
+              rounded-full bg-white/90 backdrop-blur shadow-md
+              opacity-0 group-hover:opacity-100
+              hover:shadow-lg transition-all hover:scale-110"
+              aria-label="Next trips"
+            >
+              <ChevronRight size={20} className="text-gray-700" />
+            </button>
+          )}
+        </div>
       </div>
     </section>
   );

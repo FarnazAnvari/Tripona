@@ -14,10 +14,8 @@ export default function Home() {
       </div>
       <Features /> {/* اینجا اضافه شود */}
       <TripSection />
-      {/* بخش‌های بعدی مثل تورها را اینجا اضافه خواهیم کرد */}
-      <div className="max-w-[1400px] mx-auto px-6 py-20">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">Popular Trips</h2>
-        {/* محل قرارگیری کارت‌ها */}
+      <div>
+        <h2>Fooooter</h2>
       </div>
     </main>
   );

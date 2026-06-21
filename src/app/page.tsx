@@ -2,6 +2,7 @@ import Hero from "@/components/home/Hero";
 import SearchBar from "@/components/home/SearchBar";
 import Features from "@/components/home/Features"; // وارد کردن کامپوننت جدید
 import TripSection from "@/components/home/TripSection";
+import Newsletter from "@/components/home/Newsletter";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <Features /> {/* اینجا اضافه شود */}
       <TripSection />
       <div>
+        <Newsletter />
         <h2>Fooooter</h2>
       </div>
     </main>

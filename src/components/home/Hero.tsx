@@ -47,7 +47,7 @@ export default function Hero() {
   }, [nextSlide]);
 
   return (
-    <div className="relative h-[70vh] min-h-[500px] w-full overflow-hidden bg-gray-900 group">
+    <div className="relative h-[62vh] min-h-[500px] w-full overflow-hidden bg-gray-900 group">
       {/* اسلایدها */}
       {slides.map((slide, index) => (
         <div

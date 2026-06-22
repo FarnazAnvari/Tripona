@@ -240,7 +240,7 @@ export default function TripSection() {
                   key={trip.id}
                   style={{ width: `${cardWidth}px` }}
                   className="flex-shrink-0 bg-white rounded-xl border border-gray-100
-                  overflow-hidden shadow-sm hover:shadow-xl transition group/card"
+                  overflow-hidden shadow-sm hover:shadow-xl transition group/card cursor-pointer"
                 >
                   <div className="relative h-48">
                     <Image

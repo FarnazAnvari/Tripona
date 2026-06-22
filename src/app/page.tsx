@@ -3,6 +3,10 @@ import SearchBar from "@/components/home/SearchBar";
 import Features from "@/components/home/Features"; // وارد کردن کامپوننت جدید
 import TripSection from "@/components/home/TripSection";
 import Newsletter from "@/components/home/Newsletter";
+import PopularDestinations from "@/components/home/PopularDestinations";
+import GoodStoriesSection from "@/components/home/GoodStoriesSection";
+
+GoodStoriesSection;
 
 export default function Home() {
   return (
@@ -17,6 +21,8 @@ export default function Home() {
       <TripSection />
       <div>
         <Newsletter />
+        <PopularDestinations />
+        <GoodStoriesSection />
         <h2>Fooooter</h2>
       </div>
     </main>

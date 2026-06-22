@@ -5,8 +5,7 @@ import TripSection from "@/components/home/TripSection";
 import Newsletter from "@/components/home/Newsletter";
 import PopularDestinations from "@/components/home/PopularDestinations";
 import GoodStoriesSection from "@/components/home/GoodStoriesSection";
-
-GoodStoriesSection;
+import Footer from "@/components/layout/Footer";
 
 export default function Home() {
   return (
@@ -23,7 +22,7 @@ export default function Home() {
         <Newsletter />
         <PopularDestinations />
         <GoodStoriesSection />
-        <h2>Fooooter</h2>
+        <Footer />
       </div>
     </main>
   );

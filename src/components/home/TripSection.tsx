@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 const cardWidth = 270;
 const gap = 20;
@@ -53,46 +54,6 @@ const tripData = {
       originalPrice: "5330",
       currentPrice: "4264",
     },
-    {
-      id: 6,
-      image: "/images/trips/trip6.jpg",
-      experience: "Mountain village life",
-      duration: "9 days",
-      title: "Nepal Discovery",
-      currentPrice: "1890",
-    },
-    {
-      id: 7,
-      image: "/images/trips/trip7.jpg",
-      experience: "Sahara camel trek",
-      duration: "7 days",
-      title: "Morocco Desert Tour",
-      currentPrice: "990",
-    },
-    {
-      id: 8,
-      image: "/images/trips/trip8.jpg",
-      experience: "Island hopping",
-      duration: "6 days",
-      title: "Thailand Beaches",
-      currentPrice: "1180",
-    },
-    {
-      id: 9,
-      image: "/images/trips/trip9.jpg",
-      experience: "Iceland waterfalls",
-      duration: "8 days",
-      title: "Iceland Adventure",
-      currentPrice: "2650",
-    },
-    {
-      id: 10,
-      image: "/images/trips/trip10.jpg",
-      experience: "Ancient temples",
-      duration: "9 days",
-      title: "Cambodia Discovery",
-      currentPrice: "1420",
-    },
   ],
 
   "New trips": [
@@ -137,30 +98,6 @@ const tripData = {
       duration: "6 days",
       title: "Costa Rica Nature Break",
       currentPrice: "1750",
-    },
-    {
-      id: 16,
-      image: "/images/trips/trip16.jpg",
-      experience: "Desert & ancient cities",
-      duration: "9 days",
-      title: "Jordan Explorer",
-      currentPrice: "2100",
-    },
-    {
-      id: 17,
-      image: "/images/trips/trip17.jpg",
-      experience: "Glacier & volcano landscapes",
-      duration: "8 days",
-      title: "Iceland Discovery",
-      currentPrice: "2980",
-    },
-    {
-      id: 18,
-      image: "/images/trips/trip18.jpg",
-      experience: "Historic Silk Road",
-      duration: "12 days",
-      title: "Uzbekistan Cultural Tour",
-      currentPrice: "2450",
     },
   ],
 
@@ -243,20 +180,15 @@ export default function TripSection() {
 
     updateWidth();
     window.addEventListener("resize", updateWidth);
-
     return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
   const next = () => {
-    if (canGoNext) {
-      setIndex((current) => current + 1);
-    }
+    if (canGoNext) setIndex((i) => i + 1);
   };
 
   const prev = () => {
-    if (canGoPrev) {
-      setIndex((current) => Math.max(current - 1, 0));
-    }
+    if (canGoPrev) setIndex((i) => Math.max(i - 1, 0));
   };
 
   return (
@@ -287,12 +219,11 @@ export default function TripSection() {
               onClick={prev}
               className="absolute left-2 top-1/2 -translate-y-1/2 z-20
               w-10 h-10 flex items-center justify-center
-              rounded-full bg-white/90 backdrop-blur shadow-md
+              rounded-full bg-white/90 shadow-md
               opacity-0 group-hover:opacity-100
-              hover:shadow-lg transition-all hover:scale-110"
-              aria-label="Previous trips"
+              hover:scale-110 transition"
             >
-              <ChevronLeft size={20} className="text-gray-700" />
+              <ChevronLeft size={20} />
             </button>
           )}
 
@@ -309,15 +240,15 @@ export default function TripSection() {
                   key={trip.id}
                   style={{ width: `${cardWidth}px` }}
                   className="flex-shrink-0 bg-white rounded-xl border border-gray-100
-                  overflow-hidden shadow-sm hover:shadow-[0_8px_24px_rgba(0,0,0,0.14)]
-                  transition-shadow duration-300 group/card cursor-pointer"
+                  overflow-hidden shadow-sm hover:shadow-xl transition group/card"
                 >
-                  <div className="relative h-48 overflow-hidden">
-                    <img
+                  <div className="relative h-48">
+                    <Image
                       src={trip.image}
                       alt={trip.title}
-                      className="w-full h-full object-cover
-                      group-hover/card:scale-105 transition-transform duration-500"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 270px"
+                      className="object-cover transition-transform duration-500 group-hover/card:scale-105"
                     />
 
                     <div className="absolute inset-0 bg-black/25" />
@@ -335,7 +266,7 @@ export default function TripSection() {
                         {trip.duration}
                       </p>
 
-                      <h4 className="font-bold text-gray-900 group-hover/card:text-red-600 transition-colors">
+                      <h4 className="font-bold text-gray-900 group-hover/card:text-red-600 transition">
                         {trip.title}
                       </h4>
                     </div>
@@ -368,12 +299,11 @@ export default function TripSection() {
               onClick={next}
               className="absolute right-2 top-1/2 -translate-y-1/2 z-20
               w-10 h-10 flex items-center justify-center
-              rounded-full bg-white/90 backdrop-blur shadow-md
+              rounded-full bg-white/90 shadow-md
               opacity-0 group-hover:opacity-100
-              hover:shadow-lg transition-all hover:scale-110"
-              aria-label="Next trips"
+              hover:scale-110 transition"
             >
-              <ChevronRight size={20} className="text-gray-700" />
+              <ChevronRight size={20} />
             </button>
           )}
         </div>

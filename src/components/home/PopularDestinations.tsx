@@ -15,17 +15,17 @@ const destinations = [
 
 const PopularDestinations = () => {
   const [startIndex, setStartIndex] = useState(0);
-  const visibleCount = 5; // تغییر به ۵ کارت
+  const visibleCount = 5;
 
   const nextSlide = () => {
     if (startIndex + visibleCount < destinations.length) {
-      setStartIndex(startIndex + 1);
+      setStartIndex((prev) => prev + 1);
     }
   };
 
   const prevSlide = () => {
     if (startIndex > 0) {
-      setStartIndex(startIndex - 1);
+      setStartIndex((prev) => prev - 1);
     }
   };
 
@@ -38,17 +38,20 @@ const PopularDestinations = () => {
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
           Popular destinations
         </h2>
+
         <button className="px-6 py-2 border border-black rounded-lg font-semibold hover:bg-gray-50 transition-colors text-sm">
           Search all destinations
         </button>
       </div>
 
-      <div className="relative">
-        {/* دکمه‌های ناوبری */}
+      <div className="relative group">
         {canGoPrev && (
           <button
             onClick={prevSlide}
-            className="absolute -left-5 top-[40%] -translate-y-1/2 z-20 w-11 h-11 bg-white/95 rounded-full flex items-center justify-center shadow-lg border border-gray-100 hover:bg-white transition-all"
+            className="absolute -left-5 top-1/2 -translate-y-1/2 z-20
+            w-11 h-11 bg-white/95 rounded-full flex items-center justify-center
+            shadow-lg border border-gray-100 opacity-0 group-hover:opacity-100
+            transition hover:scale-110"
           >
             <ChevronLeft className="w-6 h-6 text-gray-700" />
           </button>
@@ -57,7 +60,10 @@ const PopularDestinations = () => {
         {canGoNext && (
           <button
             onClick={nextSlide}
-            className="absolute -right-5 top-[40%] -translate-y-1/2 z-20 w-11 h-11 bg-white/95 rounded-full flex items-center justify-center shadow-lg border border-gray-100 hover:bg-white transition-all"
+            className="absolute -right-5 top-1/2 -translate-y-1/2 z-20
+            w-11 h-11 bg-white/95 rounded-full flex items-center justify-center
+            shadow-lg border border-gray-100 opacity-0 group-hover:opacity-100
+            transition hover:scale-110"
           >
             <ChevronRight className="w-6 h-6 text-gray-700" />
           </button>
@@ -73,16 +79,21 @@ const PopularDestinations = () => {
             {destinations.map((dest) => (
               <div
                 key={dest.id}
-                className="min-w-[50%] sm:min-w-[33.33%] md:min-w-[25%] lg:min-w-[20%] px-2 group" // group اینجا قرار گرفت
+                className="min-w-[50%] sm:min-w-[33.33%] md:min-w-[25%] lg:min-w-[20%] px-2"
               >
-                {/* کارت تکی که مستقل عمل می‌کند */}
-                <div className="relative aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer shadow-sm">
+                <div className="relative aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer shadow-sm group">
                   <Image
                     src={dest.image}
                     alt={dest.name}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110" // فقط تصویر همین کارت بزرگ می‌شود
+                    sizes="(max-width:640px) 50vw,
+                           (max-width:768px) 33vw,
+                           (max-width:1024px) 25vw,
+                           20vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
+
+                  <div className="absolute inset-0 bg-black/20" />
 
                   <div className="absolute inset-0 flex items-center justify-center">
                     <span className="bg-white text-black px-6 py-2.5 rounded-full font-bold text-[13px] shadow-lg whitespace-nowrap transition-transform group-hover:scale-105">

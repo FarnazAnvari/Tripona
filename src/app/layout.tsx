@@ -7,7 +7,7 @@ import Header from "@/components/layout/Header";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Intrepid Travel Clone",
+  title: "Tripona",
   description: "Adventure Travel & Tours",
 };
 

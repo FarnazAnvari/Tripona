@@ -6,25 +6,25 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 // دیتا برای هر اسلاید
 const slides = [
   {
-    url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=2000",
+    url: "/images/hero/Adventure.jpg",
     title: "Adventure starts here",
     description:
       "Discover authentic experiences and unforgettable journeys across the globe.",
   },
   {
-    url: "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&q=80&w=2000",
+    url: "/images/hero/Explore.jpg",
     title: "Explore the Unknown",
     description:
       "Dive into hidden gems and see the world through a different lens.",
   },
   {
-    url: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=2000",
+    url: "/images/hero/unforgettable.jpg",
     title: "Unforgettable Memories",
     description:
       "Join our community of travelers and share stories that last a lifetime.",
   },
   {
-    url: "https://images.unsplash.com/photo-1506929194757-81d9362951a4?auto=format&fit=crop&q=80&w=2000",
+    url: "/images/hero/awaits1.jpg",
     title: "Your Journey Awaits",
     description: "Find the perfect destination for your next big escape.",
   },

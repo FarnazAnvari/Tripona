@@ -140,6 +140,7 @@ const GoodStoriesSection = () => {
                              (max-width:1024px) 33vw,
                              20vw"
                       className="object-cover transition-transform duration-700 group-hover/card:scale-105"
+                      priority
                     />
                   </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface Message {
   id: string;
@@ -13,86 +13,143 @@ interface ChatWidgetProps {
   onClose: () => void;
 }
 
+const STORAGE_KEY = "tripona-chat-messages";
+
+const defaultMessages: Message[] = [
+  {
+    id: "welcome",
+    text: "Welcome to Tripona! How can I help you?",
+    sender: "bot",
+  },
+];
+
 export default function ChatWidget({ isOpen, onClose }: ChatWidgetProps) {
-  // ۱. ساخت لیستی از پیام‌ها (با یک پیام خوش‌آمدگویی اولیه)
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "welcome",
-      text: "Welcome to Tripona! How can I help you?",
-      sender: "bot",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(defaultMessages);
   const [inputText, setInputText] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // اسکرول خودکار به انتهای چت هنگام اضافه شدن پیام جدید
+  // خواندن پیام‌ها از localStorage بعد از mount شدن کامپوننت
+  useEffect(() => {
+    const savedMessages = localStorage.getItem(STORAGE_KEY);
+
+    if (savedMessages) {
+      try {
+        const parsedMessages = JSON.parse(savedMessages);
+
+        if (Array.isArray(parsedMessages) && parsedMessages.length > 0) {
+          setMessages(parsedMessages);
+        }
+      } catch (error) {
+        console.error(
+          "Failed to parse chat messages from localStorage:",
+          error,
+        );
+      }
+    }
+
+    setIsLoaded(true);
+  }, []);
+
+  // ذخیره پیام‌ها در localStorage هر بار که messages تغییر کند
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  }, [messages, isLoaded]);
+
+  // اسکرول خودکار به آخرین پیام
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  if (!isOpen) return null;
-
-  // ۲. مدیریت ارسال پیام
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!inputText.trim()) return;
 
-    // ایجاد شیء پیام کاربر
+    const trimmedText = inputText.trim();
+
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputText,
+      text: trimmedText,
       sender: "user",
     };
 
-    // اضافه کردن پیام کاربر به لیست
     setMessages((prev) => [...prev, userMessage]);
     setInputText("");
 
-    // شبیه‌سازی پاسخ موقت از طرف ربات (در آینده به API بک‌اند متصل می‌شود)
+    // پاسخ شبیه‌سازی‌شده تا وقتی بک‌اند آماده شود
     setTimeout(() => {
       const botReply: Message = {
         id: (Date.now() + 1).toString(),
-        text: `You said: "${userMessage.text}". We are setting up our AI backend to answer you properly soon!`,
+        text: `You said: "${trimmedText}". We are setting up our AI backend to answer you properly soon!`,
         sender: "bot",
       };
+
       setMessages((prev) => [...prev, botReply]);
     }, 800);
   };
 
+  const handleClearChat = () => {
+    setMessages(defaultMessages);
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
+  if (!isOpen) return null;
+
   return (
     <div className="fixed bottom-24 right-6 z-50 flex h-[500px] w-[350px] flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl animate-in slide-in-from-bottom-4">
-      {/* هدر */}
+      {/* Header */}
       <div className="flex items-center justify-between bg-[#E41F26] p-4 text-white">
         <h3 className="font-bold">Ask Tripona</h3>
-        <button onClick={onClose} className="hover:text-gray-200 text-lg">
-          ✕
-        </button>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleClearChat}
+            className="text-sm text-white/90 transition hover:text-white"
+            type="button"
+          >
+            Clear
+          </button>
+
+          <button
+            onClick={onClose}
+            className="text-lg transition hover:text-gray-200"
+            type="button"
+          >
+            ✕
+          </button>
+        </div>
       </div>
 
-      {/* لیست پیام‌ها */}
-      <div className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-3">
+      {/* Messages */}
+      <div className="flex-1 space-y-3 overflow-y-auto bg-gray-50 p-4">
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+            className={`flex ${
+              msg.sender === "user" ? "justify-end" : "justify-start"
+            }`}
           >
             <div
-              className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm shadow-sm border ${
+              className={`max-w-[80%] rounded-2xl border px-4 py-2.5 text-sm shadow-sm ${
                 msg.sender === "user"
-                  ? "bg-[#E41F26] text-white border-transparent rounded-tr-none"
-                  : "bg-white text-gray-800 border-gray-100 rounded-tl-none"
+                  ? "rounded-tr-none border-transparent bg-[#E41F26] text-white"
+                  : "rounded-tl-none border-gray-100 bg-white text-gray-800"
               }`}
             >
               {msg.text}
             </div>
           </div>
         ))}
-        {/* نشانگر اسکرول خودکار */}
+
         <div ref={messagesEndRef} />
       </div>
 
-      {/* بخش ورودی متن */}
-      <div className="border-t border-gray-200 p-3 bg-white">
+      {/* Input */}
+      <div className="border-t border-gray-200 bg-white p-3">
         <form onSubmit={handleSendMessage} className="flex gap-2">
           <input
             type="text"
@@ -101,9 +158,10 @@ export default function ChatWidget({ isOpen, onClose }: ChatWidgetProps) {
             placeholder="Type your message..."
             className="flex-1 rounded-full border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#E41F26]"
           />
+
           <button
             type="submit"
-            className="bg-[#E41F26] text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-[#c91b21] transition active:scale-95"
+            className="rounded-full bg-[#E41F26] px-5 py-2 text-sm font-bold text-white transition hover:bg-[#c91b21] active:scale-95"
           >
             Send
           </button>

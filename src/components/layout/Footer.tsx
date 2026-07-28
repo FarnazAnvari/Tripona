@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { ChevronDown, MessageCircle } from "lucide-react";
 import {
   FaFacebookF,
@@ -10,8 +10,11 @@ import {
   FaTiktok,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import ChatWidget from "@/components/home/ChatWidget";
 
 const Footer = () => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
   const footerLinks = {
     Booking: [
       "My Booking",
@@ -124,12 +127,16 @@ const Footer = () => {
         </div>
       </div>
 
-      <button className="fixed bottom-6 right-6 z-50 bg-[#E41F26] text-white px-4 py-3 rounded-full shadow-2xl cursor-pointer flex items-center gap-2 hover:bg-[#c91b21] transition-colors">
+      <button
+        onClick={() => setIsChatOpen(true)}
+        className="fixed bottom-6 right-6 z-50 bg-[#E41F26] text-white px-4 py-3 rounded-full shadow-2xl cursor-pointer flex items-center gap-2 hover:bg-[#c91b21] transition-colors"
+      >
         <span className="bg-white/20 p-1.5 rounded-full">
           <MessageCircle size={20} />
         </span>
         <span className="font-bold text-xs">Live chat</span>
       </button>
+      <ChatWidget isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </footer>
   );
 };

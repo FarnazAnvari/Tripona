@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tripona ✈️
 
-## Getting Started
+A modern and responsive travel platform frontend built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
 
-First, run the development server:
+Tripona is designed to help users discover destinations, explore travel experiences, and interact with a simple travel-assistant chat interface through a clean, engaging, and responsive user interface.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+> **Project status:** Frontend development in progress.  
+> Backend services, authentication, bookings, and real AI chat responses are planned for future releases.
+
+---
+
+## ✨ Features
+
+- Responsive travel landing page for desktop, tablet, and mobile devices
+- Modern hero section with travel-focused visuals
+- Destination discovery sections
+- Popular destinations and trip cards
+- Travel stories section
+- Newsletter subscription UI
+- Reusable UI components
+- Navigation header, mega menu, and footer
+- Interactive chat widget
+- Chat history persistence using `localStorage`
+- Smooth UI interactions and transitions
+- Optimized image handling with Next.js `<Image />`
+
+---
+
+## 🛠 Tech Stack
+
+| Technology                                    | Purpose                                     |
+| --------------------------------------------- | ------------------------------------------- |
+| [Next.js](https://nextjs.org/)                | React framework and application structure   |
+| [React](https://react.dev/)                   | Building interactive user interfaces        |
+| [TypeScript](https://www.typescriptlang.org/) | Type-safe development                       |
+| [Tailwind CSS](https://tailwindcss.com/)      | Utility-first styling and responsive design |
+| `localStorage`                                | Persisting chat messages in the browser     |
+| ESLint                                        | Maintaining code quality and consistency    |
+
+---
+
+## 📁 Project Structure
+
+```text
+frontend/
+│
+├── public/
+│   ├── images/                 # Static images used throughout the website
+│   └── Thumbnail LinkedIn.jpg
+│
+├── src/
+│   ├── app/                    # Next.js App Router pages and layouts
+│   │
+│   ├── components/
+│   │   ├── home/
+│   │   │   ├── Hero.tsx
+│   │   │   ├── SearchBar.tsx
+│   │   │   ├── Destinations.tsx
+│   │   │   ├── PopularDestinations.tsx
+│   │   │   ├── TripSection.tsx
+│   │   │   ├── TripCard.tsx
+│   │   │   ├── GoodStoriesSection.tsx
+│   │   │   ├── Features.tsx
+│   │   │   ├── Newsletter.tsx
+│   │   │   └── ChatWidget.tsx
+│   │   │
+│   │   ├── layout/
+│   │   │   ├── Header.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   └── MegaMenu.tsx
+│   │   │
+│   │   └── ui/
+│   │       └── Button.tsx
+│   │
+│   ├── constants/
+│   │   └── index.ts
+│   │
+│   ├── styles/
+│   │   └── globals.css
+│   │
+│   └── types/
+│       └── index.ts
+│
+├── .gitignore
+├── eslint.config.mjs
+├── next.config.ts
+├── package.json
+├── postcss.config.mjs
+├── tailwind.config.ts
+└── tsconfig.json
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

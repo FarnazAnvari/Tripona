@@ -3,162 +3,23 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { tripCategories } from "@/data/trips";
 
 const cardWidth = 270;
 const gap = 20;
 const move = cardWidth + gap;
 
-const tripData = {
-  "Only Tripona experiences": [
-    {
-      id: 1,
-      image: "/images/trips/trip1.jpg",
-      experience: "Kinabalu summit at sunrise",
-      duration: "11 days",
-      title: "Sabah Adventure",
-      originalPrice: "3170",
-      currentPrice: "2536",
-    },
-    {
-      id: 2,
-      image: "/images/trips/trip2.jpg",
-      experience: "Cappadocia weaving",
-      duration: "8 days",
-      title: "Turkey Highlights",
-      originalPrice: "1840",
-      currentPrice: "1380",
-    },
-    {
-      id: 3,
-      image: "/images/trips/trip3.jpg",
-      experience: "Galapagos swim stops",
-      duration: "8 days",
-      title: "Galapagos Island Hopping",
-      originalPrice: "3125",
-      currentPrice: "2257",
-    },
-    {
-      id: 4,
-      image: "/images/trips/trip4.jpg",
-      experience: "Late night bites",
-      duration: "10 days",
-      title: "Vietnam Express Southbound",
-      currentPrice: "1465",
-    },
-    {
-      id: 5,
-      image: "/images/trips/trip5.jpg",
-      experience: "Learning from locals",
-      duration: "12 days",
-      title: "Japan: Land of the Rising Sun",
-      originalPrice: "5330",
-      currentPrice: "4264",
-    },
-  ],
-
-  "New trips": [
-    {
-      id: 11,
-      image: "/images/trips/trip11.jpg",
-      experience: "Northern lights hunting",
-      duration: "7 days",
-      title: "Arctic Norway Explorer",
-      currentPrice: "2990",
-    },
-    {
-      id: 12,
-      image: "/images/trips/trip12.jpg",
-      experience: "Andes mountain trails",
-      duration: "9 days",
-      title: "Peru Adventure Trek",
-      originalPrice: "2490",
-      currentPrice: "1990",
-    },
-    {
-      id: 13,
-      image: "/images/trips/trip13.jpg",
-      experience: "Safari under the stars",
-      duration: "8 days",
-      title: "Kenya Wildlife Safari",
-      currentPrice: "3290",
-    },
-    {
-      id: 14,
-      image: "/images/trips/trip14.jpg",
-      experience: "Mediterranean island hopping",
-      duration: "10 days",
-      title: "Greek Islands Escape",
-      originalPrice: "2690",
-      currentPrice: "2190",
-    },
-    {
-      id: 15,
-      image: "/images/trips/trip15.jpg",
-      experience: "Rainforest wildlife",
-      duration: "6 days",
-      title: "Costa Rica Nature Break",
-      currentPrice: "1750",
-    },
-  ],
-
-  "Popular trips": [
-    {
-      id: 19,
-      image: "/images/trips/trip19.jpg",
-      experience: "Classic Inca Trail",
-      duration: "8 days",
-      title: "Inca Trail Express",
-      originalPrice: "2250",
-      currentPrice: "1890",
-    },
-    {
-      id: 20,
-      image: "/images/trips/trip20.jpg",
-      experience: "Big five safari",
-      duration: "10 days",
-      title: "Serengeti & Ngorongoro Safari",
-      currentPrice: "3490",
-    },
-    {
-      id: 21,
-      image: "/images/trips/trip21.jpg",
-      experience: "Temples at sunrise",
-      duration: "9 days",
-      title: "Cambodia & Vietnam Discovery",
-      originalPrice: "1980",
-      currentPrice: "1590",
-    },
-    {
-      id: 22,
-      image: "/images/trips/trip22.jpg",
-      experience: "Sailing the turquoise coast",
-      duration: "8 days",
-      title: "Turkey Sailing Adventure",
-      currentPrice: "1740",
-    },
-    {
-      id: 23,
-      image: "/images/trips/trip23.jpg",
-      experience: "Local food markets",
-      duration: "12 days",
-      title: "Best of Thailand",
-      originalPrice: "2290",
-      currentPrice: "1832",
-    },
-  ],
-};
-
 export default function TripSection() {
-  const [activeTab, setActiveTab] = useState("Only Tripona experiences");
+  const [activeTab, setActiveTab] = useState<keyof typeof tripCategories>(
+    "Only Tripona experiences",
+  );
   const [index, setIndex] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
 
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
-  const trips = useMemo(
-    () => tripData[activeTab as keyof typeof tripData] || [],
-    [activeTab],
-  );
+  const trips = useMemo(() => tripCategories[activeTab] || [], [activeTab]);
 
   const maxTranslate = Math.max(
     trips.length * cardWidth +
@@ -195,16 +56,16 @@ export default function TripSection() {
     <section className="py-12 bg-white px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex gap-8 mb-8 overflow-x-auto">
-          {Object.keys(tripData).map((tab) => (
+          {Object.keys(tripCategories).map((tab) => (
             <button
               key={tab}
               onClick={() => {
-                setActiveTab(tab);
+                setActiveTab(tab as keyof typeof tripCategories);
                 setIndex(0);
               }}
               className={`text-lg font-bold whitespace-nowrap transition-colors ${
                 activeTab === tab
-                  ? "text-gray-900"
+                  ? "text-gray-900 border-b-2 border-black pb-1"
                   : "text-gray-400 hover:text-gray-700"
               }`}
             >
@@ -217,6 +78,7 @@ export default function TripSection() {
           {canGoPrev && (
             <button
               onClick={prev}
+              aria-label="Previous trips"
               className="absolute left-2 top-1/2 -translate-y-1/2 z-20
               w-10 h-10 flex items-center justify-center
               rounded-full bg-white/90 shadow-md
@@ -236,11 +98,12 @@ export default function TripSection() {
               }}
             >
               {trips.map((trip) => (
-                <div
+                <Link
                   key={trip.id}
+                  href={`/trips/${trip.slug}`}
                   style={{ width: `${cardWidth}px` }}
                   className="flex-shrink-0 bg-white rounded-xl border border-gray-100
-                  overflow-hidden shadow-sm hover:shadow-xl transition group/card cursor-pointer"
+                  overflow-hidden shadow-sm hover:shadow-xl transition group/card cursor-pointer block"
                 >
                   <div className="relative h-48">
                     <Image
@@ -289,7 +152,7 @@ export default function TripSection() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -297,6 +160,7 @@ export default function TripSection() {
           {canGoNext && (
             <button
               onClick={next}
+              aria-label="Next trips"
               className="absolute right-2 top-1/2 -translate-y-1/2 z-20
               w-10 h-10 flex items-center justify-center
               rounded-full bg-white/90 shadow-md

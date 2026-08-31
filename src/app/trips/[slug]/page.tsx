@@ -14,6 +14,9 @@ import TripGallery from "@/components/trips/TripGallery";
 import TripFaq from "@/components/trips/TripFaq";
 import BookingSidebar from "@/components/trips/BookingSidebar";
 
+
+
+
 interface PageProps {
   params: Promise<{
     slug: string;

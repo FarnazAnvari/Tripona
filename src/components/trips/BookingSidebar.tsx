@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Calendar, Clock, CheckCircle2 } from "lucide-react";
 import type { Trip } from "@/data/trips";
 import BookingModal from "./BookingModal";
+import BookNowButton from "@/components/booking/BookNowButton";
 
 interface BookingSidebarProps {
   trip: Trip;
@@ -51,20 +52,20 @@ export default function BookingSidebar({ trip }: BookingSidebarProps) {
               <Clock size={16} className="text-gray-400" />
               Duration:
             </span>
-            <span className="font-semibold text-gray-900">
-              {trip.duration}
-            </span>
+            <span className="font-semibold text-gray-900">{trip.duration}</span>
           </div>
         </div>
 
         <div className="space-y-3 pt-2">
-          <button
-            type="button"
-            onClick={() => setIsModalOpen(true)}
-            className="w-full rounded-xl bg-red-600 px-4 py-3.5 text-center font-bold text-white shadow-md transition hover:bg-red-700 active:scale-[0.98]"
-          >
-            Book This Trip
-          </button>
+          <BookNowButton
+            trip={{
+              id: trip.id,
+              slug: trip.slug,
+              title: trip.title,
+              image: trip.image || "",
+              currentPrice: trip.currentPrice ?? trip.price ?? 0,
+            }}
+          />
 
           <p className="text-center text-[11px] text-gray-400">
             Free cancellation up to 30 days before departure

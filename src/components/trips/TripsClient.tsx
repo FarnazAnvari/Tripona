@@ -1,136 +1,193 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import { Search, MapPin, Clock } from "lucide-react";
-import { allTrips } from "@/data/trips";
+import { useMemo, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Search, ArrowUpDown, SlidersHorizontal } from "lucide-react";
+import { allTrips, tripCategories, Trip } from "@/data/trips";
+import TripCard from "@/components/home/TripCard";
+import TripFilters from "./TripFilters";
 
 export default function TripsClient() {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const initialQuery = searchParams.get("query") || "";
-  const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [, startTransition] = useTransition();
 
+  const searchQuery = searchParams.get("q") || "";
+  const selectedCategory = searchParams.get("category") || "all";
+  const maxPriceParam = searchParams.get("maxPrice");
+  const sortParam = searchParams.get("sort") || "featured";
+
+  // استخراج دسته‌بندی‌ها به صورت داینامیک
+  const availableCategories = useMemo(() => Object.keys(tripCategories), []);
+
+  // هندل سرچ متنی
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    const params = new URLSearchParams(searchParams.toString());
+    if (val.trim()) {
+      params.set("q", val);
+    } else {
+      params.delete("q");
+    }
+    startTransition(() => {
+      router.push(`/trips?${params.toString()}`, { scroll: false });
+    });
+  };
+
+  // هندل سورتینگ
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = e.target.value;
+    const params = new URLSearchParams(searchParams.toString());
+    if (val && val !== "featured") {
+      params.set("sort", val);
+    } else {
+      params.delete("sort");
+    }
+    startTransition(() => {
+      router.push(`/trips?${params.toString()}`, { scroll: false });
+    });
+  };
+
+  // فیلتر و مرتب‌سازی داده‌ها
   const filteredTrips = useMemo(() => {
-    if (!searchQuery.trim()) return allTrips;
+    let result: Trip[] = [...allTrips];
 
-    const q = searchQuery.toLowerCase().trim();
-    return allTrips.filter(
-      (trip) =>
-        trip.title.toLowerCase().includes(q) ||
-        trip.experience.toLowerCase().includes(q) ||
-        trip.country?.toLowerCase().includes(q),
-    );
-  }, [searchQuery]);
+    // ۱. فیلتر دسته‌بندی
+    if (selectedCategory && selectedCategory !== "all") {
+      const categoryTrips = tripCategories[selectedCategory] || [];
+      const categorySlugs = new Set(categoryTrips.map((t) => t.slug));
+      result = result.filter((trip) => categorySlugs.has(trip.slug));
+    }
+
+    // ۲. فیلتر جست‌وجو (عنوان، کشور، تجربه و توضیحات)
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter(
+        (trip) =>
+          trip.title.toLowerCase().includes(q) ||
+          trip.country?.toLowerCase().includes(q) ||
+          trip.experience.toLowerCase().includes(q) ||
+          trip.description?.toLowerCase().includes(q),
+      );
+    }
+
+    // ۳. فیلتر حداکثر قیمت
+    if (maxPriceParam) {
+      const maxPrice = Number(maxPriceParam);
+      result = result.filter((trip) => {
+        const numericPrice = Number(trip.currentPrice.replace(/[^0-9.]/g, ""));
+        return !isNaN(numericPrice) ? numericPrice <= maxPrice : true;
+      });
+    }
+
+    // ۴. مرتب‌سازی (Sorting)
+    result.sort((a, b) => {
+      const priceA = Number(a.currentPrice.replace(/[^0-9.]/g, "")) || 0;
+      const priceB = Number(b.currentPrice.replace(/[^0-9.]/g, "")) || 0;
+
+      switch (sortParam) {
+        case "price-asc":
+          return priceA - priceB;
+        case "price-desc":
+          return priceB - priceA;
+        case "title-asc":
+          return a.title.localeCompare(b.title);
+        case "duration-asc": {
+          const durA = parseInt(a.duration) || 0;
+          const durB = parseInt(b.duration) || 0;
+          return durA - durB;
+        }
+        case "featured":
+        default:
+          return a.id - b.id;
+      }
+    });
+
+    return result;
+  }, [searchQuery, selectedCategory, maxPriceParam, sortParam]);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        {/* Header & Search Input */}
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-3xl font-extrabold text-gray-900">
-              Explore All Trips
-            </h1>
-            <p className="mt-1 text-sm text-gray-600">
-              Showing {filteredTrips.length} amazing experiences
-            </p>
-          </div>
+    <div className="min-h-screen bg-gray-50/50 py-8 md:py-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-black tracking-tight text-gray-900 sm:text-4xl">
+            Explore All Trips
+          </h1>
+          <p className="mt-2 text-base text-gray-600">
+            Find and filter extraordinary curated journeys around the world.
+          </p>
+        </div>
 
-          <div className="relative w-full max-w-md">
+        {/* Search & Sort Bar */}
+        <div className="mb-8 flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+          {/* Search Input */}
+          <div className="relative flex-1">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               size={18}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
             />
             <input
               type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by title, experience, or country..."
-              className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 shadow-sm focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
+              defaultValue={searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Search by destination, country, or experience..."
+              className="w-full rounded-xl border border-gray-200 bg-gray-50/50 py-2.5 pl-10 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-red-600 focus:bg-white"
             />
+          </div>
+
+          {/* Sort Selector */}
+          <div className="flex items-center gap-2">
+            <ArrowUpDown size={16} className="text-gray-400" />
+            <select
+              value={sortParam}
+              onChange={handleSortChange}
+              className="rounded-xl border border-gray-200 bg-gray-50/50 px-3 py-2.5 text-sm font-semibold text-gray-700 outline-none transition focus:border-red-600 focus:bg-white"
+            >
+              <option value="featured">Featured / Default</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="duration-asc">Duration: Shortest first</option>
+              <option value="title-asc">Alphabetical (A-Z)</option>
+            </select>
           </div>
         </div>
 
-        {/* Trips Grid */}
-        {filteredTrips.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredTrips.map((trip) => (
-              <Link
-                key={trip.id}
-                href={`/trips/${trip.slug}`}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-              >
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
-                  <Image
-                    src={trip.image}
-                    alt={trip.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-cover transition duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
-                    <Clock size={12} />
-                    {trip.duration}
-                  </span>
-                </div>
-
-                <div className="flex flex-1 flex-col justify-between p-4">
-                  <div>
-                    {trip.country && (
-                      <div className="flex items-center gap-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        <MapPin size={12} />
-                        {trip.country}
-                      </div>
-                    )}
-                    <h2 className="mt-1 font-bold text-gray-900 group-hover:text-red-600 transition">
-                      {trip.title}
-                    </h2>
-                    <p className="mt-1 text-xs text-gray-500 line-clamp-1">
-                      {trip.experience}
-                    </p>
-                  </div>
-
-                  <div className="mt-4 flex items-baseline justify-between border-t border-gray-50 pt-3">
-                    <span className="text-[11px] font-medium text-gray-400 uppercase">
-                      From
-                    </span>
-                    <div className="flex items-center gap-1.5">
-                      {trip.originalPrice && (
-                        <span className="text-xs text-gray-400 line-through">
-                          USD ${trip.originalPrice}
-                        </span>
-                      )}
-                      <span className="text-base font-extrabold text-gray-900">
-                        USD ${trip.currentPrice}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
+        {/* Main Grid: Sidebar + Trip Cards */}
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+          {/* Left Column: Filters */}
+          <div className="lg:col-span-1">
+            <TripFilters categories={availableCategories} />
           </div>
-        ) : (
-          /* Empty State */
-          <div className="rounded-2xl border border-dashed border-gray-200 bg-white py-16 text-center">
-            <Search className="mx-auto text-gray-300" size={48} />
-            <h2 className="mt-4 text-lg font-bold text-gray-900">
-              No trips found
-            </h2>
-            <p className="mt-1 text-sm text-gray-500">
-              We couldn&apos;t find anything matching &quot;{searchQuery}&quot;.
-              Try searching for another country or tour.
-            </p>
-            <button
-              onClick={() => setSearchQuery("")}
-              className="mt-4 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition"
-            >
-              View all trips
-            </button>
-          </div>
-        )}
+
+          {/* Right Column: Trips List */}
+          <main className="lg:col-span-3">
+            <div className="mb-4 flex items-center justify-between">
+              <span className="text-sm font-bold text-gray-500">
+                Showing {filteredTrips.length}{" "}
+                {filteredTrips.length === 1 ? "trip" : "trips"}
+              </span>
+            </div>
+
+            {filteredTrips.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredTrips.map((trip) => (
+                  <TripCard key={trip.id} trip={trip} />
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-12 text-center">
+                <SlidersHorizontal className="mx-auto h-12 w-12 text-gray-300" />
+                <h3 className="mt-4 text-lg font-bold text-gray-900">
+                  No trips found
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Try adjusting your search terms or clearing some filters.
+                </p>
+              </div>
+            )}
+          </main>
+        </div>
       </div>
     </div>
   );

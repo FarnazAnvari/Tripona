@@ -131,6 +131,7 @@ export default function TripsClient() {
               type="text"
               defaultValue={searchQuery}
               onChange={handleSearchChange}
+              aria-label="Search trips"
               placeholder="Search by destination, country, or experience..."
               className="w-full rounded-xl border border-gray-200 bg-gray-50/50 py-2.5 pl-10 pr-4 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-red-600 focus:bg-white"
             />
@@ -142,6 +143,7 @@ export default function TripsClient() {
             <select
               value={sortParam}
               onChange={handleSortChange}
+              aria-label="Sort trips"
               className="rounded-xl border border-gray-200 bg-gray-50/50 px-3 py-2.5 text-sm font-semibold text-gray-700 outline-none transition focus:border-red-600 focus:bg-white"
             >
               <option value="featured">Featured / Default</option>
@@ -171,8 +173,12 @@ export default function TripsClient() {
 
             {filteredTrips.length > 0 ? (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredTrips.map((trip) => (
-                  <TripCard key={trip.id} trip={trip} />
+                {filteredTrips.map((trip, index) => (
+                  <TripCard
+                    key={trip.id}
+                    trip={trip}
+                    priority={index < 3}
+                  />
                 ))}
               </div>
             ) : (

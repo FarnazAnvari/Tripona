@@ -1,91 +1,58 @@
-# Tripona ✈️
+# 🌍 Tripona - Modern Travel & Tour Booking Platform
 
-A modern and responsive travel platform frontend built with **Next.js**, **TypeScript**, and **Tailwind CSS**.
-
-Tripona is designed to help users discover destinations, explore travel experiences, and interact with a simple travel-assistant chat interface through a clean, engaging, and responsive user interface.
-
-> **Project status:** Frontend development in progress.  
-> Backend services, authentication, bookings, and real AI chat responses are planned for future releases.
+Tripona is a production-grade travel booking web application built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS**, and **Zustand**. It delivers an intuitive, accessible, and responsive user experience for exploring adventure tours, filtering destinations, and completing a multi-step booking flow with real-time state persistence.
 
 ---
 
 ## ✨ Features
 
-- Responsive travel landing page for desktop, tablet, and mobile devices
-- Modern hero section with travel-focused visuals
-- Destination discovery sections
-- Popular destinations and trip cards
-- Travel stories section
-- Newsletter subscription UI
-- Reusable UI components
-- Navigation header, mega menu, and footer
-- Interactive chat widget
-- Chat history persistence using `localStorage`
-- Smooth UI interactions and transitions
-- Optimized image handling with Next.js `<Image />`
+- 🚀 **Next.js App Router Architecture**: Fast SSR, dynamic routing, and optimized layout hierarchy.
+- 🎨 **Modern UI/UX & Tailwind CSS**: Clean, responsive, and mobile-first interface.
+- ⚡ **Multi-Step Booking Flow**:
+  - Step 1: Tour Date & Guest Count selection with dynamic pricing calculation.
+  - Step 2: Passenger detail validation.
+  - Step 3: Comprehensive booking review and cost breakdown.
+  - Step 4: Simulated secure payment gateway and instant confirmation receipt.
+- 🔄 **Global State Management (Zustand)**: Seamless state synchronization across complex multi-step forms with persistent session support.
+- 🔍 **Interactive Filtering & Search**: Real-time filtering by category, price range, duration, and keywords with synchronized URL search parameters.
+- ♿ **Accessibility & Performance (A11y & Core Web Vitals)**:
+  - Optimized images with `next/image` (`sizes`, fallback handling, and LCP priority).
+  - ARIA attributes and keyboard navigable elements.
+  - Smooth page transitions and automatic scroll-to-top on step change.
 
 ---
 
-## 🛠 Tech Stack
+## 🛠️ Tech Stack
 
-| Technology                                    | Purpose                                     |
-| --------------------------------------------- | ------------------------------------------- |
-| [Next.js](https://nextjs.org/)                | React framework and application structure   |
-| [React](https://react.dev/)                   | Building interactive user interfaces        |
-| [TypeScript](https://www.typescriptlang.org/) | Type-safe development                       |
-| [Tailwind CSS](https://tailwindcss.com/)      | Utility-first styling and responsive design |
-| `localStorage`                                | Persisting chat messages in the browser     |
-| ESLint                                        | Maintaining code quality and consistency    |
+- **Framework**: [Next.js](https://nextjs.org/) (App Router & Turbopack)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+- **Code Quality**: ESLint & Prettier
 
 ---
 
 ## 📁 Project Structure
-
 ```text
-frontend/
-│
-├── public/
-│   ├── images/                 # Static images used throughout the website
-│   └── Thumbnail LinkedIn.jpg
-│
-├── src/
-│   ├── app/                    # Next.js App Router pages and layouts
-│   │
-│   ├── components/
-│   │   ├── home/
-│   │   │   ├── Hero.tsx
-│   │   │   ├── SearchBar.tsx
-│   │   │   ├── Destinations.tsx
-│   │   │   ├── PopularDestinations.tsx
-│   │   │   ├── TripSection.tsx
-│   │   │   ├── TripCard.tsx
-│   │   │   ├── GoodStoriesSection.tsx
-│   │   │   ├── Features.tsx
-│   │   │   ├── Newsletter.tsx
-│   │   │   └── ChatWidget.tsx
-│   │   │
-│   │   ├── layout/
-│   │   │   ├── Header.tsx
-│   │   │   ├── Footer.tsx
-│   │   │   └── MegaMenu.tsx
-│   │   │
-│   │   └── ui/
-│   │       └── Button.tsx
-│   │
-│   ├── constants/
-│   │   └── index.ts
-│   │
-│   ├── styles/
-│   │   └── globals.css
-│   │
-│   └── types/
-│       └── index.ts
-│
-├── .gitignore
-├── eslint.config.mjs
-├── next.config.ts
-├── package.json
-├── postcss.config.mjs
-├── tailwind.config.ts
-└── tsconfig.json
-```
+src/
+├── app/
+│   ├── layout.tsx                # Root layout (Header, Footer, Meta)
+│   ├── page.tsx                  # Home page (Hero, Featured Trips, Categories)
+│   ├── trips/
+│   │   ├── page.tsx              # Trips catalog (Search, Filters, Grid)
+│   │   └── [slug]/page.tsx       # Dynamic trip details & itinerary
+│   └── booking/
+│       ├── page.tsx              # Multi-step booking orchestrator
+│       └── confirmation/page.tsx # Booking confirmation & receipt view
+├── components/
+│   ├── common/                   # Shared UI components (Header, Footer, etc.)
+│   ├── home/                     # Landing page sections
+│   ├── trips/                    # Catalog filters, trip cards, detail views
+│   └── booking/                  # Step components (Step 1 to 4 & summary)
+├── store/
+│   └── bookingStore.ts           # Zustand store for booking flow
+├── types/
+│   └── trip.ts                   # TypeScript interfaces and domain types
+└── data/
+└── trips.ts                  # Mock data for destinations & packages

@@ -6,6 +6,7 @@ import { useBookingStore } from "@/store/bookingStore";
 
 interface BookingStepFourProps {
   onBack: () => void;
+  onComplete: () => void;
 }
 
 export default function BookingStepFour({ onBack }: BookingStepFourProps) {

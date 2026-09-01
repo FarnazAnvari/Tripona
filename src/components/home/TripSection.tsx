@@ -97,63 +97,67 @@ export default function TripSection() {
                 gap: `${gap}px`,
               }}
             >
-              {trips.map((trip) => (
-                <Link
-                  key={trip.id}
-                  href={`/trips/${trip.slug}`}
-                  style={{ width: `${cardWidth}px` }}
-                  className="flex-shrink-0 bg-white rounded-xl border border-gray-100
-                  overflow-hidden shadow-sm hover:shadow-xl transition group/card cursor-pointer block"
-                >
-                  <div className="relative h-48">
-                    <Image
-                      src={trip.image}
-                      alt={trip.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 270px"
-                      className="object-cover transition-transform duration-500 group-hover/card:scale-105"
-                    />
+              {trips.map((trip) => {
+                const imageSrc = trip.image || "/images/fallback-trip.jpg";
 
-                    <div className="absolute inset-0 bg-black/25" />
+                return (
+                  <Link
+                    key={trip.id}
+                    href={`/trips/${trip.slug}`}
+                    style={{ width: `${cardWidth}px` }}
+                    className="flex-shrink-0 bg-white rounded-xl border border-gray-100
+      overflow-hidden shadow-sm hover:shadow-xl transition group/card cursor-pointer block"
+                  >
+                    <div className="relative h-48">
+                      <Image
+                        src={imageSrc}
+                        alt={trip.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 270px"
+                        className="object-cover transition-transform duration-500 group-hover/card:scale-105"
+                      />
 
-                    <div className="absolute inset-0 flex items-center justify-center text-center p-4">
-                      <h3 className="text-white font-bold text-xl drop-shadow-md">
-                        {trip.experience}
-                      </h3>
-                    </div>
-                  </div>
+                      <div className="absolute inset-0 bg-black/25" />
 
-                  <div className="p-4 flex flex-col h-[150px] justify-between">
-                    <div>
-                      <p className="text-sm text-gray-500 mb-1">
-                        {trip.duration}
-                      </p>
-
-                      <h4 className="font-bold text-gray-900 group-hover/card:text-red-600 transition">
-                        {trip.title}
-                      </h4>
-                    </div>
-
-                    <div className="text-right">
-                      <p className="text-[10px] text-gray-500 uppercase">
-                        From
-                      </p>
-
-                      <div className="flex justify-end gap-2 items-center">
-                        {trip.originalPrice && (
-                          <span className="text-gray-400 line-through text-sm">
-                            USD ${trip.originalPrice}
-                          </span>
-                        )}
-
-                        <span className="text-lg font-black">
-                          USD ${trip.currentPrice}
-                        </span>
+                      <div className="absolute inset-0 flex items-center justify-center text-center p-4">
+                        <h3 className="text-white font-bold text-xl drop-shadow-md">
+                          {trip.experience}
+                        </h3>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+
+                    <div className="p-4 flex flex-col h-[150px] justify-between">
+                      <div>
+                        <p className="text-sm text-gray-500 mb-1">
+                          {trip.duration}
+                        </p>
+
+                        <h4 className="font-bold text-gray-900 group-hover/card:text-red-600 transition">
+                          {trip.title}
+                        </h4>
+                      </div>
+
+                      <div className="text-right">
+                        <p className="text-[10px] text-gray-500 uppercase">
+                          From
+                        </p>
+
+                        <div className="flex justify-end gap-2 items-center">
+                          {trip.originalPrice && (
+                            <span className="text-gray-400 line-through text-sm">
+                              USD ${trip.originalPrice}
+                            </span>
+                          )}
+
+                          <span className="text-lg font-black">
+                            USD ${trip.currentPrice}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
 

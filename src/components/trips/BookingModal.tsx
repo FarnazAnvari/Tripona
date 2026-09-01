@@ -25,7 +25,7 @@ export default function BookingModal({
 
   if (!isOpen) return null;
 
-  const basePrice = trip.currentPrice * guests;
+  const basePrice = (Number(trip.currentPrice) || 0) * guests;
   const serviceFee = Math.round(basePrice * 0.05);
   const totalPrice = basePrice + serviceFee;
 
